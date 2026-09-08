@@ -6,7 +6,7 @@ namespace MyStore.Application.Interfaces
     {
         Task<IEnumerable<User>> GetAsync();
 
-        Task<User?> GetByIdAsync();
+        Task<User?> GetByIdAsync(int Id);
 
         Task<User?> LoginAsync(string Email, string Password);
 
