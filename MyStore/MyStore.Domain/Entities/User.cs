@@ -1,8 +1,5 @@
 ﻿using MyStore.Domain.Constants;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace MyStore.Domain.Entities
 {

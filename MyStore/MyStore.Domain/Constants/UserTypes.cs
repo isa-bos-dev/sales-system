@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MyStore.Domain.Constants
+﻿namespace MyStore.Domain.Constants
 {
     public static class UserTypes
     {

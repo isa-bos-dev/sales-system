@@ -2,7 +2,6 @@
 using MyStore.Application.Interfaces;
 using MyStore.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyStore.Application.Services
 {
