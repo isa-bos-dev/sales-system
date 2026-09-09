@@ -18,7 +18,7 @@ namespace MyStore.Domain.Entities
         [Column(TypeName ="decimal(10,2)")]
         public decimal Price { get; set; }
 
-        public string Sourceimage { get; set; }=string.Empty;
+        public string SourceImage { get; set; }=string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

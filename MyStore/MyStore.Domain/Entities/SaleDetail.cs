@@ -13,7 +13,7 @@ namespace MyStore.Domain.Entities
         public int Quantity { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
-        public decimal Subtotal { get; set; }
+        public decimal SubTotal { get; set; }
 
         public virtual Sale Sale { get; set; }
 

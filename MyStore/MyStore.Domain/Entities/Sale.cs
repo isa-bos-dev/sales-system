@@ -4,7 +4,7 @@ namespace MyStore.Domain.Entities
 {
     public class Sale
     {
-        public int Id { get; set; }
+        public int SaleId { get; set; }
 
         public int UserId { get; set; }
 
