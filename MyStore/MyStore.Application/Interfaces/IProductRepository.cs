@@ -1,4 +1,4 @@
-﻿using MyStore.Domain.Entities;
+using MyStore.Domain.Entities;
 
 namespace MyStore.Application.Interfaces
 {
@@ -6,8 +6,10 @@ namespace MyStore.Application.Interfaces
     {
         Task<IEnumerable<Product>> GetAsync();
 
-        Task<Product?> GetByParameterAsync(string parameter);
+        // Searches by SKU or name
+        Task<IEnumerable<Product>> GetByParameterAsync(string parameter);
 
+        // Returns null when no product matches the id
         Task<Product?> GetByIdAsync(int id);
 
         Task AddAsync(Product product);

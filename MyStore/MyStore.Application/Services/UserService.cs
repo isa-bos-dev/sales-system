@@ -1,4 +1,4 @@
-﻿using MyStore.Application.DTOs;
+using MyStore.Application.DTOs;
 using MyStore.Application.Interfaces;
 using MyStore.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +7,7 @@ namespace MyStore.Application.Services
 {
     public class UserService(IUserRepository _repo)
     {
+        // Maps the users to DTOs so the password never leaves this layer
         public async Task<IEnumerable<UserDTO>> GetAsync()
         {
             var users = await _repo.GetAsync();
@@ -19,6 +20,7 @@ namespace MyStore.Application.Services
                 ));
         }
 
+        // Throws ValidationException when the id is missing or no user matches it
         public async Task<UserDTO> GetByIdAsync(int Id)
         {
             if (Id == 0) throw new ValidationException("User Id is required");
@@ -36,6 +38,8 @@ namespace MyStore.Application.Services
                 );
         }
 
+        // Signs the user in. The ResetPassword flag tells the caller whether the user
+        // still has to replace the initial password
         public async Task <UserDTO> LoginAsync(string Email, string Password)
         {
             if (string.IsNullOrEmpty(Email)) throw new ValidationException("Email is required");
@@ -54,6 +58,7 @@ namespace MyStore.Application.Services
                 );
         }
 
+        // Sets the new password and clears the reset flag, so it is no longer requested on sign in
         public async Task ChangePasswordAsync(ChangePasswordUserDTO data)
         {
             if (data.UserId==0) throw new ValidationException("Email is required");
@@ -68,12 +73,14 @@ namespace MyStore.Application.Services
             await _repo.EditAsync(existingUser);
         }
 
+        // Creates the user with their email as initial password. The entity keeps
+        // ResetPassword to true, forcing a change on the first sign in
         public async Task AddAsync(CreateUserDTO user)
         {
             if (string.IsNullOrEmpty(user.FullName)) throw new ValidationException("Full Name is required");
             if (string.IsNullOrEmpty(user.Email)) throw new ValidationException("Email is required");
 
-            var newUser = new User { 
+            var newUser = new User {
                 FullName = user.FullName,
                 Email = user.Email,
                 Type = user.Type,
@@ -83,6 +90,8 @@ namespace MyStore.Application.Services
             await _repo.AddAsync(newUser);
         }
 
+        // Writes back only the fields that actually changed. The password is not
+        // updated here, it has its own method
         public async Task UpdateAsync(UpdateUserDTO user)
         {
             if (user.UserId == 0) throw new ValidationException("User Id is required");
@@ -108,6 +117,7 @@ namespace MyStore.Application.Services
             await _repo.EditAsync(existingUser);
         }
 
+        // Checks that the user exists before deleting it
         public async Task DeleteAsync(int Id)
         {
             if (Id == 0) throw new ValidationException("User Id is required");

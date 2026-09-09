@@ -1,4 +1,4 @@
-﻿namespace MyStore.Application.DTOs
+namespace MyStore.Application.DTOs
 {
     public record ProductDTO(int ProductId, string SKU, string Name, int Stock, decimal Price, string SourceImage);
 

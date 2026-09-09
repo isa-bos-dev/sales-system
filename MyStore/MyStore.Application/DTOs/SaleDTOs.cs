@@ -1,4 +1,4 @@
-﻿namespace MyStore.Application.DTOs
+namespace MyStore.Application.DTOs
 {
     public record SaleDTO(int SaleId, string UserName, decimal TotalAmount, string SaleDate, IEnumerable<SaleDetailDTO>? SaleDetail = null);
 

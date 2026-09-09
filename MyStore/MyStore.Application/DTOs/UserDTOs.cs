@@ -1,4 +1,4 @@
-﻿namespace MyStore.Application.DTOs
+namespace MyStore.Application.DTOs
 {
     public record UserDTO(int UserId, string FullName, string Email, string Type, bool ResetPassword);
 

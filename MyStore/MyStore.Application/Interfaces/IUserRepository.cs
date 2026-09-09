@@ -1,4 +1,4 @@
-﻿using MyStore.Domain.Entities;
+using MyStore.Domain.Entities;
 
 namespace MyStore.Application.Interfaces
 {
@@ -6,9 +6,11 @@ namespace MyStore.Application.Interfaces
     {
         Task<IEnumerable<User>> GetAsync();
 
-        Task<User?> GetByIdAsync(int Id);
+        // Returns null when no user matches the id
+        Task<User?> GetByIdAsync(int id);
 
-        Task<User?> LoginAsync(string Email, string Password);
+        // Returns null when the credentials do not match any user
+        Task<User?> LoginAsync(string email, string password);
 
         Task AddAsync(User user);
 

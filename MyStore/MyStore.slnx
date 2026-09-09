@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="MyStore.Application/MyStore.Application.csproj" />
   <Project Path="MyStore.Domain/MyStore.Domain.csproj" />
+  <Project Path="MyStore.Infrastructure/MyStore.Infrastructure.csproj" Id="962b5af8-2e17-4541-b3c5-2ea6d8dddee4" />
 </Solution>

@@ -1,4 +1,4 @@
-﻿using MyStore.Application.DTOs;
+using MyStore.Application.DTOs;
 using MyStore.Application.Interfaces;
 using MyStore.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -20,9 +20,10 @@ namespace MyStore.Application.Services
                 ));
         }
 
+        // Searches the products by SKU or name
         public async Task<IEnumerable<ProductDTO>> GetByParameterAsync(string parameter)
         {
-            var products = await _repo.GetAsync();
+            var products = await _repo.GetByParameterAsync(parameter);
             return products.Select(e => new ProductDTO(
                 ProductId: e.ProductId,
                 SKU: e.SKU,
@@ -33,6 +34,7 @@ namespace MyStore.Application.Services
                 ));
         }
 
+        // Throws ValidationException when the id is missing or no product matches it
         public async Task<ProductDTO> GetByIdAsync(int id)
         {
             if (id == 0) throw new ValidationException("Product Id is required");
@@ -51,6 +53,8 @@ namespace MyStore.Application.Services
             );
         }
 
+        // Stores the image first so the product is saved with the path already resolved.
+        // Without an image the product keeps an empty path
         public async Task AddAsync(CreateProductDTO product)
         {
             if (string.IsNullOrEmpty(product.SKU)) throw new ValidationException("SKU is required");
@@ -58,10 +62,11 @@ namespace MyStore.Application.Services
 
             var SourceImage = "";
 
+            // The image is optional, but both the stream and the file name are needed to store it
             if (product.ImageStream != null && !string.IsNullOrEmpty(product.ImageFileName)) {
                 SourceImage = await _fileStorageService.SaveImageAsync(product.ImageStream, product.ImageFileName);
             }
-            
+
             var newProduct = new Product
             {
                 SKU = product.SKU,
@@ -74,6 +79,8 @@ namespace MyStore.Application.Services
             await _repo.AddAsync(newProduct);
         }
 
+        // Writes back only the fields that actually changed. Sending a new image replaces
+        // the current one, leaving it empty keeps the image already stored
         public async Task UpdateAsync(UpdateProductDTO product)
         {
             if (product.ProductId == 0) throw new ValidationException("Product Id is required");
@@ -99,6 +106,9 @@ namespace MyStore.Application.Services
             if (product.ImageStream != null && !string.IsNullOrEmpty(product.ImageFileName))
             {
                 var SourceImage = "";
+
+                // The new image is saved before deleting the old one, so a failure here
+                // leaves the product pointing at an image that still exists
                 SourceImage = await _fileStorageService.SaveImageAsync(product.ImageStream, product.ImageFileName);
 
                 if (!string.IsNullOrEmpty(existingProduct.SourceImage))
@@ -112,6 +122,7 @@ namespace MyStore.Application.Services
             await _repo.EditAsync(existingProduct);
         }
 
+        // Deletes the product and its image, so no orphan file is left behind
         public async Task DeleteAsync(int Id)
         {
             if (Id == 0) throw new ValidationException("Product Id is required");

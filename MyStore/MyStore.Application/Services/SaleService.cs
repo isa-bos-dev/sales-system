@@ -1,4 +1,4 @@
-﻿using MyStore.Application.DTOs;
+using MyStore.Application.DTOs;
 using MyStore.Application.Interfaces;
 using MyStore.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +7,8 @@ namespace MyStore.Application.Services
 {
     public class SaleService (ISaleRepository _repo)
     {
+        // Returns the sales of a date range without their details, which keeps the listing light.
+        // Use GetByIdAsync when the detail is needed
         public async Task<IEnumerable<SaleDTO>> GetAsync(DateOnly startDate, DateOnly endDate)
         {
             var sales = await _repo.GetAsync(startDate, endDate);
@@ -19,13 +21,14 @@ namespace MyStore.Application.Services
                 ));
         }
 
+        // Returns the sale with every detail line and its product data
         public async Task<SaleDTO> GetByIdAsync(int id)
         {
             if (id == 0) throw new ValidationException("Sale id is required");
 
             var sale = await _repo.GetByIdAsync(id);
 
-            if(sale == null) throw new ValidationException("Sale not found")
+            if(sale == null) throw new ValidationException("Sale not found");
 
 
             return new SaleDTO(
@@ -42,6 +45,8 @@ namespace MyStore.Application.Services
                 );
         }
 
+        // Builds the sale with its detail lines. The repository saves everything and
+        // discounts the stock inside a single transaction
         public async Task AddAsync(CreateSaleDTO sale)
         {
             if (sale.UserId == 0) throw new ValidationException("User id is required");
